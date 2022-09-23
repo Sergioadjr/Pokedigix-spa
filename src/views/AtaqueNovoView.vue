@@ -74,18 +74,20 @@ export default {
                 <input type="text" class="form-control" id="nome" v-model="ataqueRequest.nome">
             </div>
 
-            <div class="col-6">
+            <div class="col-5">
+                <img class="col-2" src="../../public/imagens/icons8-bang-48.png">
                 <label for="forca" class="form-label">Força</label>
                 <input type="text" class="form-control" id="forca" v-model="ataqueRequest.forca">
             </div>
 
             <div class="col-6">
+                <img class="col-2" src="../../public/imagens/icons8-goal-48.png">
                 <label for="acuracia" class="form-label">Acurácia</label>
                 <input type="text" class="form-control" id="acuracia" v-model="ataqueRequest.acuracia">
             </div>
 
             <div class="col-3">
-                <label for="acuracia" class="form-label">Poder</label>
+                <label for="acuracia" class="form-label">PP</label>
                 <input type="number" class="form-control" id="pp" v-model="ataqueRequest.pontosDePoder">
             </div>
 
@@ -109,7 +111,8 @@ export default {
 
             <div class="input-group row-12">
                 <span class="input-group-text">Descrição do Ataque:</span>
-                <textarea class="form-control" aria-label="With textarea"  id="descricao" v-model="ataqueRequest.descricao"></textarea>
+                <textarea class="form-control" aria-label="With textarea" id="descricao"
+                    v-model="ataqueRequest.descricao"></textarea>
             </div>
 
             <button @click.prevent="salvar" class="btn btn-success">Salvar</button>
