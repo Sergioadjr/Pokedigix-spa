@@ -41,7 +41,8 @@ export default {
   <main>
     <div>
       <h2>Lista de Pokemon
-      <button @click="verificarShiny" class="btn btn-primary m-1"> Shiny </button></h2>
+        <button @click="verificarShiny" class="btn btn-primary m-1"> Shiny </button>
+      </h2>
 
       <div class="container text-center">
         <div class="row row-cols-md-3 g-6">
@@ -60,7 +61,7 @@ export default {
               <RouterLink to="/" class="btn btn-primary m-3" aria-current="page">{{pokemon.nome}}</RouterLink>
             </div>
           </div>
-        </div>
+        </div>F
       </div>
     </div>
   </main>
