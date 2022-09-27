@@ -1,12 +1,14 @@
 <script>
-import AtaqueDataService from '../services/AtaqueDataService'
-import AtaqueRequest from '../models/AtaqueRequest'
-import TipoDataService from '../services/TipoDataService'
+import AtaqueDataService from '../services/AtaqueDataService';
+import AtaqueRequest from '../models/AtaqueRequest';
+import AtaqueResponse from '../models/AtaqueResponse';
+import TipoDataService from '../services/TipoDataService';
 export default {
     name: 'ataques-novo',
     data() {
         return {
             ataqueRequest: new AtaqueRequest(),
+            ataqueResponse: new AtaqueResponse(),
             salvo: false,
             categorias: [{
                 indice: 1,
@@ -25,7 +27,8 @@ export default {
             }
             ],
 
-            tipos: []
+            tipos: [],
+            desabilitarForca: false
         }
     },
     methods: {
@@ -42,7 +45,7 @@ export default {
         salvar() {
             AtaqueDataService.criar(this.ataqueRequest)
                 .then(resposta => {
-                    this.ataqueRequest.id = resposta.id;
+                    this.ataqueResponse = resposta;
                     this.salvo = true;
                 })
                 .catch(erro => {
@@ -52,13 +55,23 @@ export default {
         },
 
         novo() {
-            this.ataqueRequest = new AtaqueRequest();
             this.salvo = false;
-        }
+            this.ataqueRequest = new AtaqueRequest();
+            this.ataqueResponse = new AtaqueResponse();
+            this.ataqueRequest.categoria = this.categorias[0].nomeBanco;
+        },
 
+        escolherCategoria() {
+            if (this.ataqueRequest.categoria == "EFEITO") {
+                this.desabilitarForca = true;
+            }
+            else {
+                this.desabilitarForca = false;
+            }
+        },
     },
     mounted() {
-        this.ataqueRequest.categoria = this.categorias[0].nomeBanco;
+        this.novo();
         this.carregarTipos();
     }
 }
@@ -77,7 +90,7 @@ export default {
             <div class="col-5">
                 <img class="col-2" src="../../public/imagens/icons8-bang-48.png">
                 <label for="forca" class="form-label">Força</label>
-                <input type="text" class="form-control" id="forca" v-model="ataqueRequest.forca">
+                <input type="text" class="form-control" id="forca" v-model="ataqueRequest.forca" :disabled="desabilitarForca">
             </div>
 
             <div class="col-6">
@@ -87,14 +100,15 @@ export default {
             </div>
 
             <div class="col-3">
+                <img class="col-4" src="../../public/imagens/icons8-flexed-biceps-48.png">
                 <label for="acuracia" class="form-label">PP</label>
                 <input type="number" class="form-control" id="pp" v-model="ataqueRequest.pontosDePoder">
             </div>
 
             <div class="col-9">
                 <label for="categoria" class="form-label">Categoria</label>
-                <select id="categoria" class="form-select" aria-label="Default select example"
-                    v-model="ataqueRequest.categoria">
+                <select id="categoria" @change="escolherCategoria" class="form-select"
+                    aria-label="Default select example" v-model="ataqueRequest.categoria">
                     <option v-for="categoria in categorias" :key="categoria.indice" :value="categoria.nomeBanco">
                         {{categoria.nome}}</option>
                 </select>
@@ -122,7 +136,7 @@ export default {
     <div v-else>
         <div class="row">
             <h4> Salvo com Sucesso</h4>
-            <span>Ataque: {{ataqueRequest.nome}}</span>
+            <span>Ataque id: {{ataqueResponse.id}}</span>
         </div>
         <div class="row">
             <button @click="novo" class="btn btn-primary"> Novo </button>
