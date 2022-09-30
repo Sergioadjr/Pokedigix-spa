@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import PokemonListaView from '../views/PokemonListaView.vue'
+import PokemonNovoView from '../views/PokemonNovoView.vue'
 import TipoNovoView from '../views/TipoNovoView.vue'
 import TipoListaView from '../views/TipoListaView.vue'
+import TipoEditView from '../views/TipoEditView.vue'
 import AtaqueNovoView from '../views/AtaqueNovoView.vue';
+import AtaqueEditView from '../views/AtaqueEditView.vue';
 import AtaqueListaView from '../views/AtaqueListaView.vue';
 
 const router = createRouter({
@@ -19,6 +22,11 @@ const router = createRouter({
       component: PokemonListaView
     },
     {
+      path: '/pokemons/novo',
+      name: 'pokemons-novo',
+      component: PokemonNovoView
+    },
+    {
       path: '/tipos/novo',
       name: 'tipos-novo',
       component: TipoNovoView
@@ -29,9 +37,19 @@ const router = createRouter({
       component: TipoListaView
     },
     {
+      path: '/tipos/edit/:id',
+      name: 'tipos-edit',
+      component: TipoEditView
+    },
+    {
       path: '/ataques/novo',
       name: 'ataques-novo',
       component: AtaqueNovoView
+    },
+    {
+      path: '/ataques/edit/:id',
+      name: 'ataques-edit',
+      component: AtaqueEditView
     },
     {
       path: '/ataques/lista',

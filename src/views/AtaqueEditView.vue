@@ -4,7 +4,7 @@ import AtaqueRequest from '../models/AtaqueRequest';
 import AtaqueResponse from '../models/AtaqueResponse';
 import TipoDataService from '../services/TipoDataService';
 export default {
-    name: 'ataques-novo',
+    name: 'ataques-edit',
     data() {
         return {
             ataqueRequest: new AtaqueRequest(),
@@ -36,14 +36,13 @@ export default {
             TipoDataService.buscarTodos()
                 .then(resposta => {
                     this.tipos = resposta;
-                    this.ataqueRequest.tipoId = this.tipos[0].id;
                 })
                 .catch(erro => {
                     console.log(erro);
                 });
         },
         salvar() {
-            AtaqueDataService.criar(this.ataqueRequest)
+            AtaqueDataService.atualizar(this.$route.params.id, this.ataqueRequest)
                 .then(resposta => {
                     this.ataqueResponse = resposta;
                     this.salvo = true;
@@ -53,14 +52,6 @@ export default {
                     this.salvo = false;
                 })
         },
-
-        novo() {
-            this.salvo = false;
-            this.ataqueRequest = new AtaqueRequest();
-            this.ataqueResponse = new AtaqueResponse();
-            this.ataqueRequest.categoria = this.categorias[0].nomeBanco;
-        },
-
         escolherCategoria() {
             if (this.ataqueRequest.categoria == "EFEITO") {
                 this.desabilitarForca = true;
@@ -68,20 +59,32 @@ export default {
             else {
                 this.desabilitarForca = false;
             }
+        },
+        carregarAtaque(id) {
+            AtaqueDataService.buscarPeloId(id)
+                .then(resposta => {
+                    this.ataqueRequest = resposta;
+                    this.ataqueRequest.tipoId = resposta.tipo.id;
+                })
+                .catch(erro => {
+                    console.log(erro);
+                });
+        },
+        voltar() {
+            this.$router.push({ name: 'ataques-lista' });
         }
     },
     mounted() {
         this.carregarTipos();
-        this.novo();
-
+        this.carregarAtaque(this.$route.params.id);
     }
 }
 </script>
-
+    
 <template>
     <div v-if="!salvo">
         <form class="row g-3">
-            <h3> Cadastrar um novo Tipo de Ataque</h3>
+            <h3> Editar um Tipo de Ataque</h3>
 
             <div class="col-12">
                 <label for="nome" class="form-label">Nome do Ataque</label>
@@ -89,20 +92,17 @@ export default {
             </div>
 
             <div class="col-5">
-               
                 <label for="forca" class="form-label">Força</label>
                 <input type="text" class="form-control" id="forca" v-model="ataqueRequest.forca"
                     :disabled="desabilitarForca">
             </div>
 
             <div class="col-6">
-                
                 <label for="acuracia" class="form-label">Acurácia</label>
                 <input type="text" class="form-control" id="acuracia" v-model="ataqueRequest.acuracia">
             </div>
 
             <div class="col-3">
-               
                 <label for="acuracia" class="form-label">PP</label>
                 <input type="number" class="form-control" id="pp" v-model="ataqueRequest.pontosDePoder">
             </div>
@@ -141,7 +141,7 @@ export default {
             <span>Ataque id: {{ataqueResponse.id}}</span>
         </div>
         <div class="row">
-            <button @click="novo" class="btn btn-primary"> Novo </button>
+            <button @click="voltar" class="btn btn-primary"> Novo </button>
         </div>
     </div>
 </template>

@@ -26,10 +26,8 @@ export default {
       else {
         this.shiny = true;
       }
-    }
-
+    },
   },
-
 
   mounted() {
     this.buscarPokemons();
@@ -58,10 +56,11 @@ export default {
               <h5 class="card-title">{{pokemon.nome}}</h5>
               <p class="card-text"> Número da Pokedex: {{pokemon.numeroPokedex}}</p>
               <p class="card-text"> Nível do Pokemon:{{pokemon.nivel}}</p>
-              <RouterLink to="/" class="btn btn-primary m-3" aria-current="page">{{pokemon.nome}}</RouterLink>
+              <button type="button" class="btn btn-primary active m-3" data-bs-toggle="button"
+                aria-pressed="true">{{pokemon.nome}}</button>
             </div>
           </div>
-        </div>F
+        </div>
       </div>
     </div>
   </main>
