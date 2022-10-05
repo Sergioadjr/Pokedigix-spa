@@ -7,8 +7,8 @@ export default class PokemonRequest {
         this.nivel = null;
         this.numeroPokedex = null;
         this.felicidade = null;
-        this.tiposId = [];
-        this.ataquesId = []
+        this.tiposIds = [];
+        this.ataquesIds = [];
     }
 
     populate(obj) {
@@ -19,8 +19,8 @@ export default class PokemonRequest {
         this.nivel = obj.nivel;
         this.numeroPokedex = obj.numeroPokedex;
         this.felicidade = obj.felicidade;
-        this.tiposId = obj.tiposId;
-        this.ataquesId = obj.ataquesId;
+        this.tiposIds = obj.tiposIds;
+        this.ataquesIds = obj.ataquesIds;
     }
 
     toJson() {
@@ -32,8 +32,8 @@ export default class PokemonRequest {
             nivel: this.nivel,
             numeroPokedex: this.numeroPokedex,
             felicidade: this.felicidade,
-            tiposId: this.tiposId,
-            ataquesId: this.ataquesId,
+            tiposIds: this.tiposIds,
+            ataquesIds: this.ataquesIds
         }
     }
 }

@@ -2,6 +2,7 @@
 import PokemonDataService from '../services/PokemonDataService';
 import PokemonRequest from '../models/PokemonRequest'
 import TipoDataService from '../services/TipoDataService';
+import AtaqueDataService from '../services/AtaqueDataService';
 
 
 
@@ -12,6 +13,7 @@ export default {
         return {
             pokemonRequest: new PokemonRequest(),
             tipos: [],
+            ataques: [],
 
             salvo: false
         }
@@ -21,18 +23,34 @@ export default {
             TipoDataService.buscarTodos()
                 .then(resposta => {
                     this.tipos = resposta;
-                    this.ataqueRequest.tipoId = this.tipos[0].id;
                 })
                 .catch(erro => {
                     console.log(erro);
                 });
         },
 
+        carregarAtaques(){
+            AtaqueDataService.buscarTodos()
+            .then(resposta => {
+                this.ataques = resposta;
+                this.pokemonRequest.ataquesIds[0] = "";
+                this.pokemonRequest.ataquesIds[1] = "";
+                this.pokemonRequest.ataquesIds[2] = "";
+                this.pokemonRequest.ataquesIds[3] = "";
+            })
+            .catch (erro => {
+                console.log(erro);
+            });
+        },
+
         salvar() {
-            PokemonDataService.criar(this.Pokemon)
-                .then(resposta => {
-                    this.pokemon.id = resposta.id;
-                    console.log(this.pokemon);
+            const listaFiltradaTipos = this.pokemonRequest.tiposIds.filter(tipo => tipo != "");
+            this.pokemonRequest.tiposIds = [... new Set(listaFiltradaTipos)];
+            
+            const listaFiltradaAtaques = this.pokemonRequest.ataquesIds.filter(ataque => ataque != "");
+            this.pokemonRequest.ataquesIds = [... new Set(listaFiltradaAtaques)];
+            PokemonDataService.criar(this.pokemonRequest)
+                .then(() => {
                     this.salvo = true;
                 })
                 .catch(erro => {
@@ -42,7 +60,7 @@ export default {
         },
 
         novo() {
-            this.pokemon = new Pokemon();
+            this.pokemonRequest = new PokemonRequest();
             this.salvo = false;
         }
 
@@ -50,136 +68,206 @@ export default {
 
     mounted() {
         this.carregarTipos();
+        this.carregarAtaques();
     }
 }
 
 </script>
     
 <template>
-    <h4 class="mt-2 mb-"> Cadastro de Pokemons</h4>
-
-    <form>
-        <div class="row mt-4">
-            <div class="col-8">
-                <label for="nome" class="form-label">Nome do Pokemon</label>
-                <input v-model="pokemonRequest.nome" type="text" id="nome" required class="form-control"
-                    placeholder="Nome" aria-label="Nome do Pokemon">
-            </div>
-
-            <div class="col-4">
-                <label for="numero" class="form-label">Nº Pokedex</label>
-                <input v-model="pokemonRequest.numeroPokedex" type="number" id="numero" required class="form-control"
-                    placeholder="Número na Pokedex" aria-label="Número na Pokedex">
-            </div>
-        </div>
-
-        <div class="row mt-2">
-            <div class="col-4">
-
-                <label for="altura" class="form-label">Altura</label>
-                <input v-model="pokemonRequest.altura" type="number" id="altura" required class="form-control"
-                    placeholder="Altura" aria-label="Altura">
-            </div>
-
-            <div class="col-4">
-
-                <label for="peso" class="form-label">Peso</label>
-                <input v-model="pokemonRequest.peso" type="number" id="peso" required class="form-control"
-                    placeholder="Peso" aria-label="Peso">
-            </div>
-
-            <div class="col-4">
-
-                <label for="felicidade" class="form-label">Felicidade</label>
-                <input v-model="pokemonRequest.felicidade" type="number" id="felicidade" required class="form-control"
-                    placeholder="Felicidade" aria-label="Felicidade">
-            </div>
-        </div>
-
-        <div class="row mt-2">
-            <div class="col-4">
-
-                <label for="nivel" class="form-label">Nível</label>
-                <input v-model="pokemonRequest.nivel" type="number" id="nivel" required class="form-control"
-                    placeholder="Nivel" aria-label="Nivel">
-            </div>
-
-            <div class="col-8 mt-3">
-
-                <label class="mt-3"> Gênero:</label>
-
-                <div class="form-check form-check-inline">
-
-                    <input class="form-check-input" type="radio" name="generos" id="masculino" value="MASCULINO"
-                        required v-model="pokemonRequest.genero">
-                    <label class="form-check-label" for="inlineRadio1"><svg xmlns="http://www.w3.org/2000/svg"
-                            width="16" height="16" fill="currentColor" class="bi bi-gender-male" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
-                        </svg></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="generos" id="feminino" value="FEMININO" required
-                        v-model="pokemonRequest.genero">
-                    <label class="form-check-label" for="inlineRadio2"><svg xmlns="http://www.w3.org/2000/svg"
-                            width="16" height="16" fill="currentColor" class="bi bi-gender-female" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5z" />
-                        </svg></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="generos" id="indefinido" value="INDEFINIDO"
-                        required v-model="pokemonRequest.genero">
-                    <label class="form-check-label" for="inlineRadio3"><svg xmlns="http://www.w3.org/2000/svg"
-                            width="16" height="16" fill="currentColor" class="bi bi-question-lg" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M4.475 5.458c-.284 0-.514-.237-.47-.517C4.28 3.24 5.576 2 7.825 2c2.25 0 3.767 1.36 3.767 3.215 0 1.344-.665 2.288-1.79 2.973-1.1.659-1.414 1.118-1.414 2.01v.03a.5.5 0 0 1-.5.5h-.77a.5.5 0 0 1-.5-.495l-.003-.2c-.043-1.221.477-2.001 1.645-2.712 1.03-.632 1.397-1.135 1.397-2.028 0-.979-.758-1.698-1.926-1.698-1.009 0-1.71.529-1.938 1.402-.066.254-.278.461-.54.461h-.777ZM7.496 14c.622 0 1.095-.474 1.095-1.09 0-.618-.473-1.092-1.095-1.092-.606 0-1.087.474-1.087 1.091S6.89 14 7.496 14Z" />
-                        </svg></label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-2">
-
-            <label for="tipo1" class="form-label">Tipo 1 </label>
-            <select id="tipo1" class="form-select form-select-sm" aria-label=".form-select-sm example"
-                v-model="pokemonRequest.tiposId[0]">
-                <option value="">Nenhum</option>
-                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id"> {{tipo.nome}}
-                </option>>
-            </select>
-
-        </div>
-
-        <div class="row mt-2">
-            <label for="tipo2" class="form-label">Tipo 2 </label>
-            <select id="tipo2" class="form-select form-select-sm" aria-label=".form-select-sm example"
-                v-model="pokemonRequest.tiposId[1]">
-                <option value="">Nenhum</option>
-                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id"> {{tipo.nome}}
-                </option>>
-            </select>
-        </div>
-
-        <button @click.prevent="salvar" class="btn btn-success mt-3">Salvar</button>
-
-    </form>
-
-
-
     <div v-if="!salvo">
+        <h4 class="mt-2 mb-"> Cadastro de Pokemons</h4>
+        <div class="row justify-content-md-center" v-if="pokemonRequest.numeroPokedex > 0">
+            <div class="col col-sm-2">
+                <div class="card">
+                    <img :alt="'Imagem do Pokemon' + pokemonRequest.nome" :title="pokemonRequest.nome" class="card-img"
+                        :src="
+                          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/' +
+                          pokemonRequest.numeroPokedex +
+                          '.png'
+                        " />
+                </div>
+            </div>
+        </div>
 
+        <form>
+            <div class="row mt-4">
+                <div class="col-8">
+                    <label for="nome" class="form-label">Nome do Pokemon</label>
+                    <input v-model="pokemonRequest.nome" type="text" id="nome" required class="form-control"
+                        placeholder="Nome" aria-label="Nome do Pokemon">
+                </div>
+
+                <div class="col-4">
+                    <label for="numero" class="form-label">Nº Pokedex</label>
+                    <input v-model="pokemonRequest.numeroPokedex" type="number" id="numero" required
+                        class="form-control" placeholder="Número na Pokedex" aria-label="Número na Pokedex">
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-4">
+
+                    <label for="altura" class="form-label">Altura</label>
+                    <input v-model="pokemonRequest.altura" type="number" id="altura" required class="form-control"
+                        placeholder="Altura" aria-label="Altura">
+                </div>
+
+                <div class="col-4">
+
+                    <label for="peso" class="form-label">Peso</label>
+                    <input v-model="pokemonRequest.peso" type="number" id="peso" required class="form-control"
+                        placeholder="Peso" aria-label="Peso">
+                </div>
+
+                <div class="col-4">
+
+                    <label for="felicidade" class="form-label">Felicidade</label>
+                    <input v-model="pokemonRequest.felicidade" type="number" id="felicidade" required
+                        class="form-control" placeholder="Felicidade" aria-label="Felicidade">
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-4">
+
+                    <label for="nivel" class="form-label">Nível</label>
+                    <input v-model="pokemonRequest.nivel" type="number" id="nivel" required class="form-control"
+                        placeholder="Nivel" aria-label="Nivel">
+                </div>
+
+                <div class="col-8 mt-3">
+
+                    <label class="mt-3"> Gênero:</label>
+
+                    <div class="form-check form-check-inline">
+
+                        <input class="form-check-input" type="radio" name="generos" id="masculino" value="MASCULINO"
+                            required v-model="pokemonRequest.genero">
+                        <label class="form-check-label" for="inlineRadio1"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16" height="16" fill="currentColor" class="bi bi-gender-male"
+                                viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
+                            </svg></label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="generos" id="feminino" value="FEMININO"
+                            required v-model="pokemonRequest.genero">
+                        <label class="form-check-label" for="inlineRadio2"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16" height="16" fill="currentColor" class="bi bi-gender-female"
+                                viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5z" />
+                            </svg></label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="generos" id="indefinido" value="INDEFINIDO"
+                            required v-model="pokemonRequest.genero">
+                        <label class="form-check-label" for="inlineRadio3"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16" height="16" fill="currentColor" class="bi bi-question-lg"
+                                viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M4.475 5.458c-.284 0-.514-.237-.47-.517C4.28 3.24 5.576 2 7.825 2c2.25 0 3.767 1.36 3.767 3.215 0 1.344-.665 2.288-1.79 2.973-1.1.659-1.414 1.118-1.414 2.01v.03a.5.5 0 0 1-.5.5h-.77a.5.5 0 0 1-.5-.495l-.003-.2c-.043-1.221.477-2.001 1.645-2.712 1.03-.632 1.397-1.135 1.397-2.028 0-.979-.758-1.698-1.926-1.698-1.009 0-1.71.529-1.938 1.402-.066.254-.278.461-.54.461h-.777ZM7.496 14c.622 0 1.095-.474 1.095-1.09 0-.618-.473-1.092-1.095-1.092-.606 0-1.087.474-1.087 1.091S6.89 14 7.496 14Z" />
+                            </svg></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+
+                <label for="tipo1" class="form-label">Tipo 1 </label>
+                <select id="tipo1" class="form-select form-select-sm" aria-label=".form-select-sm example"
+                    v-model="pokemonRequest.tiposIds[0]">
+                    <option value="">Nenhum</option>
+                    <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id"> {{tipo.nome}}
+                    </option>>
+                </select>
+
+            </div>
+
+            <div class="row mt-2">
+                <label for="tipo2" class="form-label">Tipo 2 </label>
+                <select id="tipo2" class="form-select form-select-sm" aria-label=".form-select-sm example"
+                    v-model="pokemonRequest.tiposIds[1]">
+                    <option value="">Nenhum</option>
+                    <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id"> {{tipo.nome}}
+                    </option>>
+                </select>
+            </div>
+
+            <div class="row mt-2">
+
+                <label for="ataque1" class="form-label">Ataque 1 </label>
+                <select id="ataque1" class="form-select form-select-sm" aria-label=".form-select-sm example"
+                    v-model="pokemonRequest.ataquesIds[0]">
+                    <option value="">Nenhum</option>
+                    <option v-for="ataque in ataques" 
+                    :key="ataque.id" 
+                    :value="ataque.id"> 
+                    || Nome: {{ataque.nome}} 
+                    || Força: {{ataque.forca}}  
+                    || Categoria: {{ataque.categoria}}
+                    || Tipo: {{ataque.tipo.nome}}
+                    </option>>
+                </select>
+
+            </div>
+
+            <div class="row mt-2">
+                <label for="ataque2" class="form-label">Ataque 2 </label>
+                <select id="ataque2" class="form-select form-select-sm" aria-label=".form-select-sm example"
+                    v-model="pokemonRequest.ataquesIds[1]">
+                    <option value="">Nenhum</option>
+                    <option v-for="ataque in ataques" 
+                    :key="ataque.id" 
+                    :value="ataque.id"> {{ataque.nome}}
+                    </option>>
+                </select>
+            </div>
+            <div class="row mt-2">
+                <label for="ataque3" class="form-label">Ataque 3 </label>
+                <select id="ataque3" class="form-select form-select-sm" aria-label=".form-select-sm example"
+                    v-model="pokemonRequest.ataquesIds[2]">
+                    <option value="">Nenhum</option>
+                    <option v-for="ataque in ataques" 
+                    :key="ataque.id" 
+                    :value="ataque.id"> {{ataque.nome}}
+                    </option>>
+                </select>
+            </div>
+            
+            <div class="row mt-2">
+                <label for="ataque4" class="form-label">Ataque 4 </label>
+                <select id="ataque4" class="form-select form-select-sm" aria-label=".form-select-sm example"
+                    v-model="pokemonRequest.ataquesIds[3]">
+                    <option value="">Nenhum</option>
+                    <option v-for="ataque in ataques" 
+                    :key="ataque.id" 
+                    :value="ataque.id"> {{ataque.nome}}
+                    </option>>
+                </select>
+            </div>
+
+
+
+            <button @click.prevent="salvar" class="btn btn-success mt-3">Salvar</button>
+        </form>
     </div>
+
     <div v-else>
         <div class="row">
-            <h4> Salvo com Sucesso</h4>
-            <span>Pokemon id: {{pokemon.id}}</span>
+            <div class="alert alert-success mt-3" role="alert">
+                O pokemon {{pokemonRequest.nome}} foi salvo com Sucesso!
+            </div>
         </div>
+
         <div class="row">
-            <button @click="novo" class="btn btn-primary"> Novo </button>
+            <button @click="novo" class="btn btn-primary mt-3"> Novo </button>
         </div>
+
     </div>
 
 </template>

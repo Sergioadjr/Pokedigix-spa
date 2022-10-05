@@ -23,6 +23,20 @@ import { RouterLink } from 'vue-router';
                         <li class="nav-item dropdown">
                             <RouterLink class="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
+                                Treinadores
+                            </RouterLink>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <RouterLink class="dropdown-item" to="/treinadores/novo">Novo</RouterLink>
+                                </li>
+                                <li>
+                                    <RouterLink class="dropdown-item" to="/treinadores/lista">Lista</RouterLink>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <RouterLink class="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
                                 Ataques
                             </RouterLink>
                             <ul class="dropdown-menu">

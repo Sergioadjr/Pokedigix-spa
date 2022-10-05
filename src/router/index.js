@@ -4,9 +4,11 @@ import PokemonNovoView from '../views/PokemonNovoView.vue'
 import TipoNovoView from '../views/TipoNovoView.vue'
 import TipoListaView from '../views/TipoListaView.vue'
 import TipoEditView from '../views/TipoEditView.vue'
-import AtaqueNovoView from '../views/AtaqueNovoView.vue';
-import AtaqueEditView from '../views/AtaqueEditView.vue';
-import AtaqueListaView from '../views/AtaqueListaView.vue';
+import AtaqueNovoView from '../views/AtaqueNovoView.vue'
+import AtaqueEditView from '../views/AtaqueEditView.vue'
+import AtaqueListaView from '../views/AtaqueListaView.vue'
+import TreinadorListaView from '../views/TreinadorListaView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +27,11 @@ const router = createRouter({
       path: '/pokemons/novo',
       name: 'pokemons-novo',
       component: PokemonNovoView
+    },
+    {
+      path: '/treinadores/lista',
+      name: 'treinadores-lista',
+      component: TreinadorListaView
     },
     {
       path: '/tipos/novo',
@@ -56,14 +63,7 @@ const router = createRouter({
       name: 'ataques-lista',
       component: AtaqueListaView
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
+
   ]
 })
 
