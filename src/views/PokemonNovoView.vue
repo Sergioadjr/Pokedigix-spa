@@ -14,6 +14,8 @@ export default {
             pokemonRequest: new PokemonRequest(),
             tipos: [],
             ataques: [],
+            ataquesSelecionados: [],
+            ataqueSelecionado: {},
 
             salvo: false
         }
@@ -29,26 +31,22 @@ export default {
                 });
         },
 
-        carregarAtaques(){
+        carregarAtaques() {
             AtaqueDataService.buscarTodos()
-            .then(resposta => {
-                this.ataques = resposta;
-                this.pokemonRequest.ataquesIds[0] = "";
-                this.pokemonRequest.ataquesIds[1] = "";
-                this.pokemonRequest.ataquesIds[2] = "";
-                this.pokemonRequest.ataquesIds[3] = "";
-            })
-            .catch (erro => {
-                console.log(erro);
-            });
+                .then(resposta => {
+                    this.ataques = resposta;
+                })
+                .catch(erro => {
+                    console.log(erro);
+                });
         },
 
         salvar() {
             const listaFiltradaTipos = this.pokemonRequest.tiposIds.filter(tipo => tipo != "");
             this.pokemonRequest.tiposIds = [... new Set(listaFiltradaTipos)];
-            
-            const listaFiltradaAtaques = this.pokemonRequest.ataquesIds.filter(ataque => ataque != "");
-            this.pokemonRequest.ataquesIds = [... new Set(listaFiltradaAtaques)];
+
+            this.pokemonRequest.ataquesIds = this.ataquesSelecionados.map(ataque => ataque.id);
+
             PokemonDataService.criar(this.pokemonRequest)
                 .then(() => {
                     this.salvo = true;
@@ -56,12 +54,21 @@ export default {
                 .catch(erro => {
                     console.log(erro);
                     this.salvo = false;
-                })
+                });
         },
 
         novo() {
             this.pokemonRequest = new PokemonRequest();
             this.salvo = false;
+        },
+        selecionarAtaque() {
+            if (this.ataquesSelecionados.length < 4) {
+                this.ataquesSelecionados.push(this.ataqueSelecionado);
+                this.ataquesSelecionados = [...new Set(this.ataquesSelecionados)];
+            }
+        },
+        removerAtaque(indice) {
+            this.ataquesSelecionados.splice(indice, 1);
         }
 
     },
@@ -200,58 +207,51 @@ export default {
 
             <div class="row mt-2">
 
-                <label for="ataque1" class="form-label">Ataque 1 </label>
+                <label for="ataque1" class="form-label">Ataque</label>
                 <select id="ataque1" class="form-select form-select-sm" aria-label=".form-select-sm example"
-                    v-model="pokemonRequest.ataquesIds[0]">
-                    <option value="">Nenhum</option>
-                    <option v-for="ataque in ataques" 
-                    :key="ataque.id" 
-                    :value="ataque.id"> 
-                    || Nome: {{ataque.nome}} 
-                    || Força: {{ataque.forca}}  
-                    || Categoria: {{ataque.categoria}}
-                    || Tipo: {{ataque.tipo.nome}}
+                    v-model="ataqueSelecionado" @change="selecionarAtaque">
+                    <option v-for="ataque in ataques" :key="ataque.id" :value="ataque">
+                        || Nome: {{ataque.nome}}
                     </option>>
                 </select>
 
             </div>
 
-            <div class="row mt-2">
-                <label for="ataque2" class="form-label">Ataque 2 </label>
-                <select id="ataque2" class="form-select form-select-sm" aria-label=".form-select-sm example"
-                    v-model="pokemonRequest.ataquesIds[1]">
-                    <option value="">Nenhum</option>
-                    <option v-for="ataque in ataques" 
-                    :key="ataque.id" 
-                    :value="ataque.id"> {{ataque.nome}}
-                    </option>>
-                </select>
-            </div>
-            <div class="row mt-2">
-                <label for="ataque3" class="form-label">Ataque 3 </label>
-                <select id="ataque3" class="form-select form-select-sm" aria-label=".form-select-sm example"
-                    v-model="pokemonRequest.ataquesIds[2]">
-                    <option value="">Nenhum</option>
-                    <option v-for="ataque in ataques" 
-                    :key="ataque.id" 
-                    :value="ataque.id"> {{ataque.nome}}
-                    </option>>
-                </select>
-            </div>
-            
-            <div class="row mt-2">
-                <label for="ataque4" class="form-label">Ataque 4 </label>
-                <select id="ataque4" class="form-select form-select-sm" aria-label=".form-select-sm example"
-                    v-model="pokemonRequest.ataquesIds[3]">
-                    <option value="">Nenhum</option>
-                    <option v-for="ataque in ataques" 
-                    :key="ataque.id" 
-                    :value="ataque.id"> {{ataque.nome}}
-                    </option>>
-                </select>
-            </div>
+            <div class="row">
+                <div class="col-3 m-3" v-for="ataque in ataquesSelecionados" :key="ataque.id">
+                    <div class="container card h-100">
+                        <div class="card-header bg-dark text-white row">
+                            <div class="mt-1 col-9"><strong>{{ataque.nome}}</strong></div>
+                            <div class="col-2"><button type="button" class="btn btn-outline-danger"
+                                    @click.prevemt="removerAtaque(indice)"><svg xmlns="http://www.w3.org/2000/svg"
+                                        width="16" height="16" fill="currentColor" class="bi bi-trash-fill"
+                                        viewBox="0 0 16 16">
+                                        <path
+                                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                                    </svg></button></div>
 
-
+                        </div>
+                        <div class="card-body">
+                            Força: {{ataque.forca}}
+                        </div>
+                        <div class="card-body">
+                            Tipo: {{ataque.tipo.nome}}
+                        </div>
+                        <div class="card-body">
+                            Acurácia: {{ataque.acuracia}}
+                        </div>
+                        <div class="card-body">
+                            Poder: {{ataque.pontosDePoder}}
+                        </div>
+                        <div class="card-body">
+                            Categoria: {{ataque.categoria}}
+                        </div>
+                        <div class="card-body">
+                            Categoria: {{ataque.descricao}}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <button @click.prevent="salvar" class="btn btn-success mt-3">Salvar</button>
         </form>

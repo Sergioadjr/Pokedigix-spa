@@ -1,30 +1,30 @@
-// import http from '../http-commons'
+import http from '../http-commons'
 
-// class EnderecoDataService {
-//     async buscarTodos() {
-//         let resposta = await http.get('/ataques');
-//         return resposta.data;
-//     }
+class EnderecoDataService {
+    async buscarTodos() {
+        let resposta = await http.get('/enderecos');
+        return resposta.data;
+    }
 
-//     async buscarPeloId(id) {
-//         let resposta = await http.get('/ataques/' + id);
-//         return resposta.data;
-//     }
+    async buscarPeloId(id) {
+        let resposta = await http.get('/enderecos/' + id);
+        return resposta.data;
+    }
 
-//     async criar(ataque) {
-//         let resposta = await http.post('/ataques', ataque)
-//         return resposta.data;
-//     }
+    async criar(endereco) {
+        let resposta = await http.post('/enderecos', endereco)
+        return resposta.data;
+    }
 
-//     async atualizar(id, ataque) {
-//         let resposta = await http.put('/ataques/' + id, ataque);
-//         return resposta.data;
-//     }
+    async atualizar(id, endereco) {
+        let resposta = await http.put('/enderecos/' + id, endereco);
+        return resposta.data;
+    }
 
-//     async remover(id) {
-//         await http.delete('/ataques/' + id);
-//     }
+    async remover(id) {
+        await http.delete('/enderecos/' + id);
+    }
 
-// }
+}
 
-// export default new EnderecoDataService();
+export default new EnderecoDataService();

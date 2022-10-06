@@ -84,8 +84,8 @@ export default {
                                 <th scope="col">Acurácia</th>
                                 <th scope="col">Pontos de Poder</th>
                                 <th scope="col">Descrição</th>
-                                <th>EDITAR</th>
-                                <th>EXCLUIR</th>
+                                <th>Editar</th>
+                                <th>Excluir</th>
                             </tr>
                         </thead>
 
@@ -100,7 +100,7 @@ export default {
                                 <td>{{ataque.pontosDePoder}}</td>
                                 <td>{{ataque.descricao}}</td>
 
-                                <td><button type="button" class="btn btn-primary" @click="editar(ataque.id)">
+                                <td><button type="button" class="btn btn-outline-warning" @click="editar(ataque.id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path
@@ -113,7 +113,7 @@ export default {
 
                                 <td>
 
-                                    <button @click="selecionar(ataque)" type="button" class="btn btn-primary"
+                                    <button @click="selecionar(ataque)" type="button" class="btn btn-outline-danger"
                                         data-bs-toggle="modal" data-bs-target="#confirmacaoExclusao"
                                         data-bs-whatever="@mdo">
 
