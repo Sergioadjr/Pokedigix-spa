@@ -91,7 +91,7 @@ export default {
                             </button>
                         </td>
                         <td>
-                            <button type="button" class="btn" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                                 data-bs-target="#confirmacaoExclusao" @click="selecionar(tipo)">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-trash3" viewBox="0 0 16 16">

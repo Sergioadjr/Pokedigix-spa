@@ -76,7 +76,7 @@ export default {
           <tr v-for="tipo in tipos" :key="tipo.id">
             <td>{{ tipo.nome }}</td>
             <td>
-              <button type="button" class="btn" @click="editar(tipo.id)">
+              <button type="button" class="btn btn-outline-warning" @click="editar(tipo.id)">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -98,7 +98,7 @@ export default {
             <td>
               <button
                 type="button"
-                class="btn"
+                class="btn btn-outline-danger"
                 data-bs-toggle="modal"
                 data-bs-target="#confirmacaoExclusao"
                 @click="selecionar(tipo)"

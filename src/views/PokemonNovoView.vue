@@ -3,8 +3,7 @@ import PokemonDataService from '../services/PokemonDataService';
 import PokemonRequest from '../models/PokemonRequest'
 import TipoDataService from '../services/TipoDataService';
 import AtaqueDataService from '../services/AtaqueDataService';
-
-
+import MensagemSucessoVue from '../components/MensagemSucesso.vue';
 
 
 export default {
@@ -71,6 +70,10 @@ export default {
             this.ataquesSelecionados.splice(indice, 1);
         }
 
+    },
+
+    components: {
+        MensagemSucessoVue
     },
 
     mounted() {
@@ -258,16 +261,11 @@ export default {
     </div>
 
     <div v-else>
-        <div class="row">
-            <div class="alert alert-success mt-3" role="alert">
+        <MensagemSucessoVue @cadastro="novo" urlListagem="pokemons-lista">
+            <span>
                 O pokemon {{pokemonRequest.nome}} foi salvo com Sucesso!
-            </div>
-        </div>
-
-        <div class="row">
-            <button @click="novo" class="btn btn-primary mt-3"> Novo </button>
-        </div>
-
+            </span>
+        </MensagemSucessoVue>
     </div>
 
 </template>

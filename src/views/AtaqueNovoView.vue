@@ -3,6 +3,7 @@ import AtaqueDataService from '../services/AtaqueDataService';
 import AtaqueRequest from '../models/AtaqueRequest';
 import AtaqueResponse from '../models/AtaqueResponse';
 import TipoDataService from '../services/TipoDataService';
+import MensagemSucessoVue from '../components/MensagemSucesso.vue';
 export default {
     name: 'ataques-novo',
     data() {
@@ -69,6 +70,10 @@ export default {
                 this.desabilitarForca = false;
             }
         }
+
+    },
+    components: {
+        MensagemSucessoVue
     },
     mounted() {
         this.carregarTipos();
@@ -89,20 +94,20 @@ export default {
             </div>
 
             <div class="col-5">
-               
+
                 <label for="forca" class="form-label">Força</label>
                 <input type="text" class="form-control" id="forca" v-model="ataqueRequest.forca"
                     :disabled="desabilitarForca">
             </div>
 
             <div class="col-6">
-                
+
                 <label for="acuracia" class="form-label">Acurácia</label>
                 <input type="text" class="form-control" id="acuracia" v-model="ataqueRequest.acuracia">
             </div>
 
             <div class="col-3">
-               
+
                 <label for="acuracia" class="form-label">PP</label>
                 <input type="number" class="form-control" id="pp" v-model="ataqueRequest.pontosDePoder">
             </div>
@@ -136,12 +141,8 @@ export default {
     </div>
 
     <div v-else>
-        <div class="row">
-            <h4> Salvo com Sucesso</h4>
-            <span>Ataque id: {{ataqueResponse.id}}</span>
-        </div>
-        <div class="row">
-            <button @click="novo" class="btn btn-primary"> Novo </button>
-        </div>
+        <MensagemSucessoVue @cadastro="novo" urlListagem="ataques-lista">
+            <span>Ataque id: {{ataqueResponse.id}} foi salvo</span>
+        </MensagemSucessoVue>
     </div>
 </template>

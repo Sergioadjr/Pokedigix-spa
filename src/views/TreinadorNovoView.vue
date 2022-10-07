@@ -4,16 +4,21 @@ import PokemonDataService from "../services/PokemonDataService";
 import TreinadorDataService from "../services/TreinadorDataService";
 import EnderecoDataService from "../services/EnderecoDataService";
 import Endereco from '../models/Endereco';
+import MensagemSucessoVue from "../components/MensagemSucesso.vue";
 export default {
     name: "treinadores-novo",
     data() {
         return {
             treinadorRequest: new TreinadorRequest(),
+            treinadorResponse: {},
             endereco: new Endereco(),
             salvo: false,
             pokemons: [],
             enderecos: [],
         };
+    },
+    components: {
+        MensagemSucessoVue
     },
     methods: {
         carregarPokemons() {
@@ -34,23 +39,36 @@ export default {
                     console.log(erro);
                 });
         },
-        salvarEndereco(){
+        salvarEndereco() {
             EnderecoDataService.criar(this.endereco)
-            .then(()=> {
+                .then((resposta) => {
 
-                this.enderecos.push(this.endereco);
-                this.endereco = new Endereco();
-            })
-            .catch (erro => {
-                console.log(erro);
-            });
+                    this.enderecos.push(resposta);
+                    this.endereco = new Endereco();
+                })
+                .catch(erro => {
+                    console.log(erro);
+                });
         },
         cancelar() {
             this.endereco = new Endereco();
         },
-        salvar() { },
-        novo() { },
-        voltar() { },
+        salvar() {
+            TreinadorDataService.criar(this.treinadorRequest)
+                .then(resposta => {
+                    this.treinadorResponse = resposta;
+                    this.salvo = true;
+                })
+                .catch(erro => {
+                    this.salvo = false;
+                    console.log(erro);
+                })
+        },
+        novo() {
+            this.salvo = false;
+            this.treinadorRequest = new TreinadorRequest();
+        },
+
     },
     mounted() {
         this.carregarPokemons();
@@ -61,6 +79,10 @@ export default {
     
 <template>
     <div v-if="!salvo">
+
+
+
+
         <form>
             <div class="mb-3">
                 <label for="nome" class="form-label">Nome do treinador</label>
@@ -73,6 +95,7 @@ export default {
                     {{ pokemon.nome }} | {{ pokemon.nivel }}
                 </option>
             </select>
+
             <div class="row">
                 <div class="col-4 mt-3" v-for="endereco in enderecos" :key="endereco.id">
                     <div class="card h-100">
@@ -80,8 +103,13 @@ export default {
                             <p class="card-text"><strong>Cidade:</strong> {{endereco.cidade}}</p>
                             <p class="card-text"><strong>Regiao:</strong> {{endereco.regiao}}</p>
                         </div>
+                        <div class="card-footer text-center">
+                            <input class="form-check-input" type="radio" :value="endereco.id" name="radioEndereco"
+                                v-model="treinadorRequest.idEndereco" />
+                        </div>
                     </div>
                 </div>
+
                 <div class="col-4 mt-3">
                     <div class="card h-100 text-center">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#enderecoModal"
@@ -95,15 +123,20 @@ export default {
                     </div>
                 </div>
             </div>
+
             <button @click.prevent="salvar" class="btn btn-success mt-2">Salvar</button>
         </form>
+
+
+
         <div class="modal fade" id="enderecoModal" tabindex="-1" aria-labelledby="enderecoModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="enderecoModalLabel">Cadastro de Endereco</h1>
-                        <button type="button" @click="cancelar" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" @click="cancelar" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <form>
                         <div class="modal-body">
@@ -113,8 +146,10 @@ export default {
                             <input type="text" required class="form-control" v-model="endereco.regiao" id="regiao" />
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click.prevent="cancelar" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-primary" @click.prevent="salvarEndereco" data-bs-dismiss="modal">Salvar</button>
+                            <button type="button" class="btn btn-secondary" @click.prevent="cancelar"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" @click.prevent="salvarEndereco"
+                                data-bs-dismiss="modal">Salvar</button>
                         </div>
                     </form>
                 </div>
@@ -122,18 +157,8 @@ export default {
         </div>
     </div>
     <div v-else>
-        <div class="row">
-            <div class="alert alert-success mt-3" role="alert">
-                O pokemon {{ treinadorRequest.nome }} foi salvo com sucesso!
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-1">
-                <button @click="novo" class="btn btn-primary">Novo</button>
-            </div>
-            <div class="col-1">
-                <button @click="voltar" class="btn btn-secondary">Voltar</button>
-            </div>
-        </div>
+    <MensagemSucessoVue urlListagem="treinadores-lista" @cadastro="novo">
+        O Treinador {{ treinadorRequest.nome }} foi salvo com sucesso!
+    </MensagemSucessoVue>
     </div>
 </template>
