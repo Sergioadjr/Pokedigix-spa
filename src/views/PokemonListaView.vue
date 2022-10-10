@@ -64,6 +64,7 @@ export default {
     // },
 
   },
+  
 
   mounted() {
     this.buscarPokemons();

@@ -1,6 +1,4 @@
 <script>
-import TreinadorRequest from '../models/TreinadorRequest';
-
     export default {
         name: 'mensagem-sucesso',
         props: {
