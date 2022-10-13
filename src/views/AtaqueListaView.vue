@@ -1,6 +1,7 @@
 <script>
 import AtaqueDataService from '../services/AtaqueDataService';
 import Loading from "vue-loading-overlay";
+import Ordenacao from "../components/Ordenacao.vue";
 
 export default {
     name: "ataques-lista",
@@ -10,10 +11,40 @@ export default {
             ataqueSelecionado: this.inicializaAtaque(),
             isLoading: false,
             fullPage: false,
+            pagina: 0,
+            tamanho: 3,
+            ordenacao: {
+                titulo: "",
+                direcao: "",
+                campo: ""
+            },
+            opcoes: [{
+                titulo: "Nome: Crescente",
+                direcao: "ASC",
+                campo: "nome"
+            },
+            {
+                titulo: "Nome: Decrescente",
+                direcao: "DESC",
+                campo: "nome"
+            },
+            {
+                titulo: "Numero: Crescente",
+                direcao: "ASC",
+                campo: "numeroPokedex"
+            },
+            {
+                titulo: "Nivel: Decrescente",
+                direcao: "DESC",
+                campo: "nivel"
+            }],
+            termo: ""
         };
     },
     components: {
         Loading,
+        Ordenacao,
+
     },
     methods: {
         buscarAtaques() {
@@ -68,6 +99,14 @@ export default {
     <main>
         <div>
             <h2 class=" mb-4 mt-4">Lista de Ataques</h2>
+            <div class="row">
+                <div class="col-9 mb-3">
+                    <Buscar></Buscar>
+                </div>
+                <div class="col-3 mb-3">
+                    <Ordenacao></Ordenacao>
+                </div>
+            </div>
             <div class="table-responsive">
                 <div class="container-0">
                     <loading v-model:active="isLoading" :is-full-page="fullPage" :loader="'spinner'" />
@@ -141,7 +180,8 @@ export default {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Ao excluir este ataque, "<strong>{{ataqueSelecionado.nome}}</strong>" não será mais possível utiliza-lo.
+                        Ao excluir este ataque, "<strong>{{ataqueSelecionado.nome}}</strong>" não será mais possível
+                        utiliza-lo.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

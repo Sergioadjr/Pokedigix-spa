@@ -1,23 +1,63 @@
 <script>
 import PokemonDataService from '../services/PokemonDataService';
+import Ordenacao from '../components/Ordenacao.vue'
 export default {
   name: "lista-pokemons",
   data() {
     return {
       pokemons: [],
       pokemonSelecionado: this.inicializaPokemon(),
-      shiny: false
+      shiny: false,
+      pagina: 0,
+      tamanho: 3,
+      ordenacao: {
+        titulo: "",
+        direcao: "",
+        campo: ""
+      },
+      opcoes: [{
+        titulo: "Nome: Crescente",
+        direcao: "ASC",
+        campo: "nome"
+      },
+      {
+        titulo: "Nome: Decrescente",
+        direcao: "DESC",
+        campo: "nome"
+      },
+      {
+        titulo: "Numero: Crescente",
+        direcao: "ASC",
+        campo: "numeroPokedex"
+      },
+      {
+        titulo: "Nivel: Decrescente",
+        direcao: "DESC",
+        campo: "nivel"
+      }],
+      termo: ""
     };
   },
+
+  components: {
+    Ordenacao
+  },
+
   methods: {
     buscarPokemons() {
-      PokemonDataService.buscarTodos()
-        .then(resposta => {
-          this.pokemons = resposta
+      PokemonDataService.buscarTodosPaginadoOrdenado(this.pagina, this.tamanho, this.ordenacao.campo, this.ordenacao.direcao, this.termo)
+        .then((resposta) => {
+          this.pokemons = resposta;
         })
-        .catch(erro => {
+        .catch((erro) => {
           console.log(erro);
         });
+    },
+
+    filtrarDigitado() {
+      if (this.termo.length >= 3) {
+        this.buscarPokemons();
+      }
     },
 
     verificarShiny() {
@@ -51,23 +91,13 @@ export default {
           this.isLoading = false;
         });
     },
-    // exclusaoDoPokemon() {
-    //   this.isLoading = true;
-    //   PokemonDataService.remover(this)
-    //   then(() => {
-    //     this.excluir = true;
-    //   })
-    //     .catch(erro => {
-    //       console.log(erro);
-    //       this.salvo = false;
-    //     })
-    // },
 
   },
-  
+
 
   mounted() {
     this.buscarPokemons();
+    this.ordenacao = this.opcoes[0];
   }
 }
 </script>
@@ -78,6 +108,18 @@ export default {
       <h2>Lista de Pokemon
         <button @click="verificarShiny" class="btn btn-primary m-1"> Shiny </button>
       </h2>
+
+      <div class="row justify-content-end">
+        <div class="col-2">
+          <Ordenacao v-model="ordenacao" @ordenar="buscarPokemons" :ordenacao="ordenacao" :opcoes="opcoes" />
+        </div>
+        <div class="col-4">
+          <form class="d-flex mb-2" role="search">
+            <input class="form-control me-2" v-model="termo" type="search" placeholder="Procurar" aria-label="Search">
+            <button class="btn btn-outline-success" type="button" @click.prevent="buscarPokemons">Filtrar</button>
+          </form>
+        </div>
+      </div>
 
       <div class="container text-center">
         <div class="row row-cols-md-3 g-6">
@@ -159,5 +201,24 @@ export default {
         </div>
       </div>
     </div>
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
   </main>
 </template>
