@@ -1,6 +1,10 @@
 <script>
 import PokemonDataService from '../services/PokemonDataService';
-import Ordenacao from '../components/Ordenacao.vue'
+import Ordenacao from '../components/Ordenacao.vue';
+import Pesquisa from '../components/Pesquisa.vue'
+import Paginacao from '../components/Paginacao.vue';
+
+
 export default {
   name: "lista-pokemons",
   data() {
@@ -15,6 +19,8 @@ export default {
         direcao: "",
         campo: ""
       },
+      total: 5,
+      quantidade: 3,
       opcoes: [{
         titulo: "Nome: Crescente",
         direcao: "ASC",
@@ -40,10 +46,27 @@ export default {
   },
 
   components: {
-    Ordenacao
+    Ordenacao,
+    Paginacao,
+    Pesquisa,
   },
 
   methods: {
+    filtarPeloDigitada() {
+      if (this.termo.length > 3) {
+        this.buscarPokemons();
+      }
+    },
+    trocarPagina(p) {
+      this.pagina = p;
+      this.buscarPokemons();
+    },
+
+    pesquisar(texto) {
+      this.termo = texto;
+      this.buscarPokemons();
+    },
+
     buscarPokemons() {
       PokemonDataService.buscarTodosPaginadoOrdenado(this.pagina, this.tamanho, this.ordenacao.campo, this.ordenacao.direcao, this.termo)
         .then((resposta) => {
@@ -96,10 +119,10 @@ export default {
 
 
   mounted() {
-    this.buscarPokemons();
     this.ordenacao = this.opcoes[0];
-  }
-}
+    this.buscarPokemons();
+  },
+};
 </script>
 
 <template>
@@ -118,6 +141,7 @@ export default {
             <input class="form-control me-2" v-model="termo" type="search" placeholder="Procurar" aria-label="Search">
             <button class="btn btn-outline-success" type="button" @click.prevent="buscarPokemons">Filtrar</button>
           </form>
+          <Pesquisa :texto="termo" :pesquisar="pesquisar" />
         </div>
       </div>
 
@@ -199,10 +223,11 @@ export default {
             </button>
           </div>
         </div>
+        <Paginacao :total="total" :quantidade="quantidade" :atual="pagina" :trocarPagina="trocarPagina"></Paginacao>
       </div>
     </div>
 
-    <nav aria-label="Page navigation example">
+    <!-- <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li class="page-item">
           <a class="page-link" href="#" aria-label="Previous">
@@ -218,7 +243,7 @@ export default {
           </a>
         </li>
       </ul>
-    </nav>
+    </nav> -->
 
   </main>
 </template>
