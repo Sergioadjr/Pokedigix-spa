@@ -10,9 +10,9 @@ export default {
     props: {
       quantidade: {
         type: Number,
-        default: 4
+        default: 3
       },
-      total: {
+      totalPaginas: {
         type: Number,
         default: 1
       },
@@ -28,7 +28,7 @@ export default {
       current(){
         let current = 1;
         current = this.atual < 1 ? 1 : this.atual
-        return current > this.total ? this.total : current
+        return current > this.totalPaginas ? this.totalPaginas : current
       },
       inicio(){
         let inicio = this.current - this.current % this.quantidade
@@ -45,8 +45,8 @@ export default {
           if(this.current % this.quantidade == 0){
               fim = this.current
             }
-            fim = fim > this.total ? this.total : fim
-            return Math.min(fim, this.total)
+            fim = fim > this.totalPaginas ? this.totalPaginas : fim
+            return Math.min(fim, this.totalPaginas)
       },
       contadorDePaginas(){
           let paginas = []
@@ -68,7 +68,7 @@ export default {
       <li :key="p" v-for="p in contadorDePaginas" :class="p == atual ? 'active' : ''" class="page-item">
         <a href="#" @click="p == atual ? null : trocarPagina(p)" v-text="p" class="page-link"></a>
       </li>
-      <li v-if="fim != total" class="page-item">
+      <li v-if="fim != totalPaginas" class="page-item">
         <a href="#" @click="trocarPagina(atual+1)" aria-label="Próximo" class="page-link"><span aria-hidden="true">&raquo;</span></a>
       </li>
     </ul>

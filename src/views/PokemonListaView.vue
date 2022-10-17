@@ -12,14 +12,14 @@ export default {
       pokemons: [],
       pokemonSelecionado: this.inicializaPokemon(),
       shiny: false,
-      pagina: 0,
+      pagina: 1,
       tamanho: 3,
       ordenacao: {
         titulo: "",
         direcao: "",
         campo: ""
       },
-      total: 5,
+      totalPaginas: '',
       quantidade: 3,
       opcoes: [{
         titulo: "Nome: Crescente",
@@ -68,9 +68,10 @@ export default {
     },
 
     buscarPokemons() {
-      PokemonDataService.buscarTodosPaginadoOrdenado(this.pagina, this.tamanho, this.ordenacao.campo, this.ordenacao.direcao, this.termo)
+      PokemonDataService.buscarTodosPaginadoOrdenado(this.pagina -1, this.tamanho, this.ordenacao.campo, this.ordenacao.direcao, this.termo)
         .then((resposta) => {
-          this.pokemons = resposta;
+          this.pokemons = resposta.pokemons;
+          this.totalPaginas = resposta.totalPaginas;
         })
         .catch((erro) => {
           console.log(erro);
@@ -136,11 +137,8 @@ export default {
         <div class="col-2">
           <Ordenacao v-model="ordenacao" @ordenar="buscarPokemons" :ordenacao="ordenacao" :opcoes="opcoes" />
         </div>
-        <div class="col-4">
-          <form class="d-flex mb-2" role="search">
-            <input class="form-control me-2" v-model="termo" type="search" placeholder="Procurar" aria-label="Search">
-            <button class="btn btn-outline-success" type="button" @click.prevent="buscarPokemons">Filtrar</button>
-          </form>
+        <div class="col-4 mb-3">
+          
           <Pesquisa :texto="termo" :pesquisar="pesquisar" />
         </div>
       </div>
@@ -221,29 +219,12 @@ export default {
                   d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
               </svg>
             </button>
+            
           </div>
         </div>
-        <Paginacao :total="total" :quantidade="quantidade" :atual="pagina" :trocarPagina="trocarPagina"></Paginacao>
+        <Paginacao :totalPaginas="totalPaginas" :quantidade="quantidade" :atual="pagina" :trocarPagina="trocarPagina"></Paginacao>
       </div>
     </div>
-
-    <!-- <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav> -->
 
   </main>
 </template>
