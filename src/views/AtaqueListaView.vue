@@ -30,6 +30,17 @@ export default {
                 direcao: "DESC",
                 campo: "nome"
             },
+            {
+                titulo: "Força do Ataque: Crescente",
+                direcao: "ASC",
+                campo: "forca"
+            },
+            {
+                titulo: "Força do Ataque: Decrescente",
+                direcao: "DESC",
+                campo: "forca"
+            },
+            
            ],
             termo: ""
         };
@@ -115,7 +126,7 @@ export default {
     <main>
         <div>
             <h2 class=" mb-4 mt-4">Lista de Ataques</h2>
-            <div class="row mb-2">
+            <div class="row mb-3">
                 <div class="col-9 mb-3">
                     <Buscar></Buscar>
                 </div>
