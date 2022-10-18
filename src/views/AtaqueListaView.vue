@@ -40,8 +40,22 @@ export default {
                 direcao: "DESC",
                 campo: "forca"
             },
-            
-           ],
+            {
+                titulo: "Categoria do Ataque: Crescente",
+                direcao: "ASC",
+                campo: "categoria"
+            },
+            {
+                titulo: "TIPO: Crescente",
+                direcao: "ASC",
+                campo: "tipo_nome"
+            },
+            {
+                titulo: "TIPO: Decrescente",
+                direcao: "DESC",
+                campo: "tipo_nome"
+            },
+            ],
             termo: ""
         };
     },
@@ -67,7 +81,7 @@ export default {
             this.termo = texto;
             this.buscarAtaques();
         },
-        
+
         buscarAtaques() {
             AtaqueDataService.buscarTodosPaginadoOrdenado(this.pagina - 1, this.tamanho, this.ordenacao.campo, this.ordenacao.direcao, this.termo)
                 .then((resposta) => {
@@ -131,7 +145,7 @@ export default {
                     <Buscar></Buscar>
                 </div>
                 <div class="col-3 mb-3">
-                    <Ordenacao v-model="ordenacao" @ordenar="buscarAtaques" :ordenacao="ordenacao" :opcoes="opcoes"/>
+                    <Ordenacao v-model="ordenacao" @ordenar="buscarAtaques" :ordenacao="ordenacao" :opcoes="opcoes" />
                 </div>
                 <Pesquisa :texto="termo" :pesquisar="pesquisar" />
             </div>
@@ -219,7 +233,8 @@ export default {
                 </div>
             </div>
         </div>
-        <Paginacao :totalPaginas="totalPaginas" :quantidade="quantidade" :atual="pagina" :trocarPagina="trocarPagina"></Paginacao>
+        <Paginacao :totalPaginas="totalPaginas" :quantidade="quantidade" :atual="pagina" :trocarPagina="trocarPagina">
+        </Paginacao>
     </main>
 </template>
 
