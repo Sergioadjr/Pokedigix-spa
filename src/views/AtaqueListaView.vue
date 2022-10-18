@@ -2,6 +2,8 @@
 import AtaqueDataService from '../services/AtaqueDataService';
 import Loading from "vue-loading-overlay";
 import Ordenacao from "../components/Ordenacao.vue";
+import Pesquisa from '../components/Pesquisa.vue'
+import Paginacao from '../components/Paginacao.vue';
 
 export default {
     name: "ataques-lista",
@@ -9,56 +11,69 @@ export default {
         return {
             ataques: [],
             ataqueSelecionado: this.inicializaAtaque(),
-            isLoading: false,
-            fullPage: false,
-            pagina: 0,
-            tamanho: 3,
+            pagina: 1,
+            tamanho: 5,
             ordenacao: {
                 titulo: "",
                 direcao: "",
                 campo: ""
             },
+            totalPaginas: '',
+            quantidade: 3,
             opcoes: [{
-                titulo: "Nome: Crescente",
+                titulo: "Nome do Ataque: Crescente",
                 direcao: "ASC",
                 campo: "nome"
             },
             {
-                titulo: "Nome: Decrescente",
+                titulo: "Nome do Ataque: Decrescente",
                 direcao: "DESC",
                 campo: "nome"
             },
-            {
-                titulo: "Numero: Crescente",
-                direcao: "ASC",
-                campo: "numeroPokedex"
-            },
-            {
-                titulo: "Nivel: Decrescente",
-                direcao: "DESC",
-                campo: "nivel"
-            }],
+           ],
             termo: ""
         };
     },
-    components: {
-        Loading,
-        Ordenacao,
 
+    components: {
+        Ordenacao,
+        Paginacao,
+        Pesquisa,
     },
     methods: {
+
+        filtarPeloDigitada() {
+            if (this.termo.length > 3) {
+                this.buscarAtaques();
+            }
+        },
+        trocarPagina(p) {
+            this.pagina = p;
+            this.buscarAtaques();
+        },
+
+        pesquisar(texto) {
+            this.termo = texto;
+            this.buscarAtaques();
+        },
+        
         buscarAtaques() {
-            this.isLoading = true;
-            AtaqueDataService.buscarTodos()
-                .then(resposta => {
-                    this.ataques = resposta;
-                    this.isLoading = false;
+            AtaqueDataService.buscarTodosPaginadoOrdenado(this.pagina - 1, this.tamanho, this.ordenacao.campo, this.ordenacao.direcao, this.termo)
+                .then((resposta) => {
+                    this.ataques = resposta.ataques;
+                    this.totalPaginas = resposta.totalPaginas;
                 })
-                .catch(erro => {
+                .catch((erro) => {
                     console.log(erro);
-                    this.isLoading = false;
                 });
         },
+
+        filtrarDigitado() {
+            if (this.termo.length >= 3) {
+                this.buscarAtaques();
+            }
+        },
+
 
         editar(id) {
             this.$router.push({ name: 'ataques-edit', params: { id: id } });
@@ -91,6 +106,7 @@ export default {
 
     mounted() {
         this.buscarAtaques();
+        this.ordenacao = this.opcoes[0];
     }
 }
 </script>
@@ -99,13 +115,14 @@ export default {
     <main>
         <div>
             <h2 class=" mb-4 mt-4">Lista de Ataques</h2>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col-9 mb-3">
                     <Buscar></Buscar>
                 </div>
                 <div class="col-3 mb-3">
-                    <Ordenacao></Ordenacao>
+                    <Ordenacao v-model="ordenacao" @ordenar="buscarAtaques" :ordenacao="ordenacao" :opcoes="opcoes"/>
                 </div>
+                <Pesquisa :texto="termo" :pesquisar="pesquisar" />
             </div>
             <div class="table-responsive">
                 <div class="container-0">
@@ -191,6 +208,7 @@ export default {
                 </div>
             </div>
         </div>
+        <Paginacao :totalPaginas="totalPaginas" :quantidade="quantidade" :atual="pagina" :trocarPagina="trocarPagina"></Paginacao>
     </main>
 </template>
 
