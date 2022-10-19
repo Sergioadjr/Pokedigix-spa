@@ -1,6 +1,10 @@
 <script>
 import TreinadorDataService from '../services/TreinadorDataService';
 import Loading from "vue-loading-overlay";
+import { useCookies } from "vue3-cookies";
+
+const { cookies } = useCookies();
+
 export default {
     name: "treinadores-lista",
     data() {
@@ -25,6 +29,10 @@ export default {
                     console.log(erro);
                     this.isLoading = false;
                 });
+        },
+        trocarTreinador(treinador) {
+            cookies.set('treinador_id', treinador.id , '3MIN')
+            cookies.set('treinador_nome', treinador.nome , '3MIN')
         },
         // editar(id) {
         //   this.$router.push({ name: "tipos-edit", params: { id: id } });
@@ -66,6 +74,7 @@ export default {
             <table class="table table-striped ">
                 <thead>
                     <tr>
+                        <th scope="col-1">Login</th>
                         <th scope="col-4">Nome do Treinador</th>
                         <th scope="col-2">Nome da Cidade</th>
                         <th scope="col-2">Nome da Região</th>
@@ -74,10 +83,22 @@ export default {
                 </thead>
                 <tbody>
                     <tr v-for="treinador in treinadores" :key="treinador.id">
+                        <td>
+                            <button type="button" class="btn btn-outline-primary" @click="trocarTreinador(treinador)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                    <path fill-rule="evenodd"
+                                        d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                                </svg>
+                            </button>
+                        </td>
+
                         <td>{{ treinador.nome }}</td>
-                       
+
                         <td>{{ treinador.endereco.cidade }}</td>
-                        
+
                         <td>{{ treinador.endereco.regiao }}</td>
                         <td>
                             <button type="button" class="btn btn-outline-warning" @click="editar(tipo.id)">
@@ -104,7 +125,7 @@ export default {
                 </tbody>
             </table>
         </div>
-        
+
         <!-- <div class="modal fade" id="confirmacaoExclusao" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -130,6 +151,6 @@ export default {
     </div>
 
     <button type="button" @click="editar(tipo.id)">
-    novo
+        novo
     </button>
 </template>

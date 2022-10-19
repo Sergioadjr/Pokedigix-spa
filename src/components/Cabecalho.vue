@@ -1,5 +1,20 @@
-<script setup>
+<script>
 import { RouterLink } from 'vue-router';
+import { useCookies } from "vue3-cookies";
+
+const { cookies } = useCookies();
+
+export default {
+    data() {
+        return {
+            nomeTreinador: ''
+        }
+    },
+
+    mounted() {
+        this.nomeTreinador = cookies.get('treinador_nome');
+    }
+}
 </script>
 
 <template>
@@ -73,6 +88,17 @@ import { RouterLink } from 'vue-router';
                                 </li>
                                 <li>
                                     <RouterLink class="dropdown-item" to="/pokemons/lista">Lista</RouterLink>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown" v-if="nomeTreinador">
+                            <RouterLink class="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                {{nomeTreinador}}
+                            </RouterLink>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <RouterLink class="dropdown-item" to="/treinadores/lista">Trocar</RouterLink>
                                 </li>
                             </ul>
                         </li>
