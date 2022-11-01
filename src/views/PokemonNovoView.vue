@@ -4,6 +4,7 @@ import PokemonRequest from '../models/PokemonRequest'
 import TipoDataService from '../services/TipoDataService';
 import AtaqueDataService from '../services/AtaqueDataService';
 import MensagemSucessoVue from '../components/MensagemSucesso.vue';
+import MensagemErro from '../components/icons/MensagemErro.vue';
 
 
 export default {
@@ -15,7 +16,7 @@ export default {
             ataques: [],
             ataquesSelecionados: [],
             ataqueSelecionado: {},
-
+            mensagemDeErro: "",
             salvo: false
         }
     },
@@ -33,7 +34,7 @@ export default {
         carregarAtaques() {
             AtaqueDataService.buscarTodos()
                 .then(resposta => {
-                    this.ataques = resposta;
+                    this.ataques = resposta.ataques;
                 })
                 .catch(erro => {
                     console.log(erro);
@@ -52,6 +53,9 @@ export default {
                 })
                 .catch(erro => {
                     console.log(erro);
+                    const toastLiveExample = document.getElementById('liveToast')
+                    const toast = new Toast(toastLiveExample);
+                    toast.show();
                     this.salvo = false;
                 });
         },
@@ -73,7 +77,7 @@ export default {
     },
 
     components: {
-        MensagemSucessoVue
+        MensagemSucessoVue, MensagemErro
     },
 
     mounted() {
@@ -92,9 +96,9 @@ export default {
                 <div class="card">
                     <img :alt="'Imagem do Pokemon' + pokemonRequest.nome" :title="pokemonRequest.nome" class="card-img"
                         :src="
-                          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/' +
-                          pokemonRequest.numeroPokedex +
-                          '.png'
+                            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/' +
+                            pokemonRequest.numeroPokedex +
+                            '.png'
                         " />
                 </div>
             </div>
@@ -192,7 +196,7 @@ export default {
                 <select id="tipo1" class="form-select form-select-sm" aria-label=".form-select-sm example"
                     v-model="pokemonRequest.tiposIds[0]">
                     <option value="">Nenhum</option>
-                    <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id"> {{tipo.nome}}
+                    <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id"> {{ tipo.nome }}
                     </option>>
                 </select>
 
@@ -203,7 +207,7 @@ export default {
                 <select id="tipo2" class="form-select form-select-sm" aria-label=".form-select-sm example"
                     v-model="pokemonRequest.tiposIds[1]">
                     <option value="">Nenhum</option>
-                    <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id"> {{tipo.nome}}
+                    <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id"> {{ tipo.nome }}
                     </option>>
                 </select>
             </div>
@@ -214,7 +218,7 @@ export default {
                 <select id="ataque1" class="form-select form-select-sm" aria-label=".form-select-sm example"
                     v-model="ataqueSelecionado" @change="selecionarAtaque">
                     <option v-for="ataque in ataques" :key="ataque.id" :value="ataque">
-                        || Nome: {{ataque.nome}}
+                        || Nome: {{ ataque.nome }}
                     </option>>
                 </select>
 
@@ -224,7 +228,7 @@ export default {
                 <div class="col-3 m-3" v-for="ataque in ataquesSelecionados" :key="ataque.id">
                     <div class="container card h-100">
                         <div class="card-header bg-dark text-white row">
-                            <div class="mt-1 col-9"><strong>{{ataque.nome}}</strong></div>
+                            <div class="mt-1 col-9"><strong>{{ ataque.nome }}</strong></div>
                             <div class="col-2"><button type="button" class="btn btn-outline-danger"
                                     @click.prevemt="removerAtaque(indice)"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="16" height="16" fill="currentColor" class="bi bi-trash-fill"
@@ -235,35 +239,35 @@ export default {
 
                         </div>
                         <div class="card-body">
-                            Força: {{ataque.forca}}
+                            Força: {{ ataque.forca }}
                         </div>
                         <div class="card-body">
-                            Tipo: {{ataque.tipo.nome}}
+                            Tipo: {{ ataque.tipo.nome }}
                         </div>
                         <div class="card-body">
-                            Acurácia: {{ataque.acuracia}}
+                            Acurácia: {{ ataque.acuracia }}
                         </div>
                         <div class="card-body">
-                            Poder: {{ataque.pontosDePoder}}
+                            Poder: {{ ataque.pontosDePoder }}
                         </div>
                         <div class="card-body">
-                            Categoria: {{ataque.categoria}}
+                            Categoria: {{ ataque.categoria }}
                         </div>
                         <div class="card-body">
-                            Categoria: {{ataque.descricao}}
+                            Categoria: {{ ataque.descricao }}
                         </div>
                     </div>
                 </div>
             </div>
-
             <button @click.prevent="salvar" class="btn btn-success mt-3">Salvar</button>
         </form>
+        <MensagemErro :mensagemDeErro="mensagemDeErro" />
     </div>
 
     <div v-else>
         <MensagemSucessoVue @cadastro="novo" urlListagem="pokemons-lista">
             <span>
-                O pokemon {{pokemonRequest.nome}} foi salvo com Sucesso!
+                O pokemon {{ pokemonRequest.nome }} foi salvo com Sucesso!
             </span>
         </MensagemSucessoVue>
     </div>
