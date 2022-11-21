@@ -94,7 +94,7 @@ export default {
                         <li class="nav-item dropdown" v-if="nomeTreinador">
                             <RouterLink class="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                {{nomeTreinador}}
+                                {{ nomeTreinador }}
                             </RouterLink>
                             <ul class="dropdown-menu">
                                 <li>
@@ -104,6 +104,10 @@ export default {
                         </li>
                     </ul>
                 </div>
+            </div>
+            <div>
+                <RouterLink class="btn btn-dark me-3" to="/SignIn">Login</RouterLink>
+                <RouterLink class="btn btn-dark me-3" to="/SignUp">Cadastrar</RouterLink>
             </div>
         </nav>
     </header>

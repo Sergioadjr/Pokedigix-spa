@@ -186,7 +186,7 @@ export default {
                     v-model="ataqueRequest.descricao"></textarea>
             </div>
 
-            <button typy="submit" class="btn btn-success">Salvar</button>
+            <button type="submit" class="btn btn-success">Salvar</button>
         </form>
         <MensagemErro v-if="mensagemErroDTO.tipo == 'DataIntegrityViolationException'"
             :mensagemErroDTO="mensagemErroDTO"></MensagemErro>

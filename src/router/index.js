@@ -8,6 +8,7 @@ const AtaqueNovoView = () => import('../views/AtaqueNovoView.vue');
 const AtaqueEditView = () => import('../views/AtaqueEditView.vue');
 const AtaqueListaView = () => import('../views/AtaqueListaView.vue');
 const TreinadorListaView = () => import('../views/TreinadorListaView.vue');
+const SignUpView = () => import('../views/SignUpView.vue');
 const TreinadorNovoView = () => import('../views/TreinadorNovoView.vue');
 const PageNotFound = () => import('../views/PageNotFound.vue');
 
@@ -41,6 +42,16 @@ const router = createRouter({
       name: 'treinadores-novo',
       component: TreinadorNovoView
     },
+    {
+      path: '/Signup',
+      name: 'Authentication',
+      component: SignUpView
+    },
+    // {
+    //   path: '/Signin',
+    //   name: 'Authentication',
+    //   component: AuthView
+    // },
     {
       path: '/tipos/novo',
       name: 'tipos-novo',
