@@ -44,43 +44,43 @@ export default {
 </script>
 
 <template>
-    <div>
-        <form class="row g-3 needs-validation" @submit.prevent="salvar" novalidate>
-            <h3> Cadastro de Usuário</h3>
+    <div class="card mx-auto mt-3">
+        <div>
+            <form class="row g-3 needs-validation mt-3 ms-2" @submit.prevent="salvar" novalidate>
+                <div class="mt-3 ms-2">
+                    <h3> Cadastro de Usuário</h3>
+                </div>
 
-            <div class="container">
-                <div class="row">
-                    <div class="mx-auto">
-                        <div class="col-8">
-                            <label for="nome" class="form-label">Nome Completo</label>
-                            <input type="text" class="form-control" id="nome">
-                        </div>
-
-                        <div class="col-8">
-                            <label for="nome" class="form-label">E-mail</label>
-                            <input type="email" class="form-control" id="email">
-                        </div>
-
-                        <div class="col-8">
-                            <label for="nome" class="form-label">Senha</label>
-                            <input type="password" class="form-control" id="senha">
-                        </div>
-
-
-                        <div class="row mt-2 ">
-                            <div>
-                                <button type="submit" class="btn btn-success">Salvar</button>
+                <div class="container">
+                    <div class="row ms-2">
+                        <div class="mx-auto">
+                            <div class="col-8 mt-3">
+                                <label for="nome" class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="nome">
                             </div>
-                            <div class="me-8 mt-2">
-                                <button type="submit" class="btn btn-danger">Cancelar</button>
+
+                            <div class="col-8">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="email">
                             </div>
+
+                            <div class="col-8">
+                                <label for="senha" class="form-label">Senha</label>
+                                <input type="password" class="form-control" id="senha">
+                            </div>
+
+                            <div class="d-grid gap-2 col-6 mx-auto ">
+                                <div class="mt-3 mb-3">
+                                    <button type="submit" class="btn btn-success me-md-2">Salvar</button>
+                                    <button type="submit" class="btn btn-danger">Cancelar</button>
+                                </div>
+                            </div>
+
                         </div>
-
-
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
 </template>
