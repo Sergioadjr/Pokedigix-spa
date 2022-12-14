@@ -7,12 +7,12 @@ const { cookies } = useCookies();
 export default {
     data() {
         return {
-            nomeTreinador: ''
+            nomeTreinador: ""
         }
     },
 
     mounted() {
-        this.nomeTreinador = cookies.get('treinador_nome');
+        this.nomeTreinador = cookies.get('treinador_nome').username;
     }
 }
 </script>

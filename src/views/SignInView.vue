@@ -1,33 +1,45 @@
 <script>
-import { Toast } from 'bootstrap';
 
 import AuthDataService from '../services/AuthDataService';
 
-import MensagemErro from '../components/icons/MensagemErro.vue';
-import MensagemSucessoVue from '../components/MensagemSucesso.vue';
+import LoginDTO from '../models/LoginDTO';
+
+import LoginResponse from '../models/LoginResponse';
+
+import { useCookies } from "vue3-cookies";
+
+const { cookies } = useCookies();
 
 export default {
-    name: 'Login',
+    name: "Login",
     data() {
         return {
-            salvo: false,
-        }
+            loginResponse: new LoginResponse(),
+            loginDTO: new LoginDTO(),
+            lembrar: false
+        };
     },
 
-    salvar() {
-        AuthDataService.criar()
-            .then(() => {
-                this.salvo = true;
-            })
-            .catch(erro => {
-                console.log(erro);
-                const toastLiveExample = document.getElementById('liveToast')
-                const toast = new Toast(toastLiveExample);
-                toast.show();
-                this.salvo = false;
-            });
+    methods: {
+        acessar() {
+            AuthDataService.acessar(this.loginDTO)
+                .then(resposta => {
+                    this.loginResponse=resposta;
+                    cookies.set('usuarioLogado', this.loginResponse, tempoDeExpiracao());
+                    this.$router.push({name: 'tipos-lista'});
+                })
+                .catch(erro => {
+                    console.log(erro);
+                })
+        },
+        tempoDeExpiracao(){
+            return this.lembrar ? '1m':'30min';
+        }
+    },
+    mounted() {
     }
 }
+
 </script>
 
 <template>
@@ -36,15 +48,15 @@ export default {
             <h3>Login</h3>
         </div>
 
-        <form action="#" class="signin-form mt-3 col-md-5 mx-auto">
+        <form class="signin-form mt-3 col-md-5 mx-auto" @submit.prevent="acessar">
             <div class="form-group mb-3">
                 <label class="form-label" for="name">Usuário</label>
-                <input type="text" class="form-control" placeholder="Usuário" required="" autocomplete="off">
+                <input type="text" class="form-control" placeholder="Username" required v-model="loginDTO.username">
             </div>
 
             <div class="form-group mb-3">
                 <label class="form-label" for="password">Senha</label>
-                <input type="password" class="form-control" placeholder="Senha" required="" autocomplete="off">
+                <input type="password" class="form-control" placeholder="Senha" required v-model="loginDTO.password">
             </div>
 
             <div class="form-group text-md-center">
@@ -52,7 +64,7 @@ export default {
 
                 <div class="text-md-center">
                     <label class="checkbox-wrap checkbox-primary mb-1">Lembrar-me
-                        <input type="checkbox" checked="">
+                        <input type="checkbox" checked="lembrar">
                         <span class="checkmark"></span>
                     </label>
                 </div>
