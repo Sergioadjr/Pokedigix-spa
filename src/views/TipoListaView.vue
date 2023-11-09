@@ -18,7 +18,9 @@ export default {
       this.isLoading = true;
       TipoDataService.buscarTodos()
         .then((resposta) => {
+          console.log("socorro", resposta)
           this.tipos = resposta;
+          console.log("socorro", this.tipos)
           this.isLoading = false;
         })
         .catch((erro) => {

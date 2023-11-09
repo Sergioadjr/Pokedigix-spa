@@ -25,7 +25,8 @@ export default {
             AuthDataService.acessar(this.loginDTO)
                 .then(resposta => {
                     this.loginResponse=resposta;
-                    cookies.set('usuarioLogado', this.loginResponse, tempoDeExpiracao());
+                    cookies.set('usuarioLogado', this.loginResponse, this.tempoDeExpiracao()
+                    );
                     this.$router.push({name: 'tipos-lista'});
                 })
                 .catch(erro => {
@@ -33,7 +34,7 @@ export default {
                 })
         },
         tempoDeExpiracao(){
-            return this.lembrar ? '1m':'30min';
+            return this.lembrar ? '50m':'30min';
         }
     },
     mounted() {

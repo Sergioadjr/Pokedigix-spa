@@ -44,12 +44,12 @@ const router = createRouter({
       component: TreinadorNovoView
     },
     {
-      path: '/Signup',
+      path: '/signup',
       name: 'Authentication',
       component: SignUpView
     },
     {
-      path: '/Signin',
+      path: '/signin',
       name: 'Login',
       component: SignInView
     },

@@ -3,7 +3,7 @@ export default class AuthRequest{
         this.username = null;
         this.password = null;
         this.email = null;
-        this.roles = ['treinador'];
+        this.roles = ['ROLE_ADMIN'];
     }
 
     populate(obj){
